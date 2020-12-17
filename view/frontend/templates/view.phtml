@@ -1,0 +1,16 @@
+<?php
+/**
+ * @var \Inchoo\Sample03\Block\View $block
+ */
+
+?>
+
+<?php foreach ($block->showNews($block->getRequest()->getParam('id')) as $news): ?>
+    <h1><?= $news->getTitle() ?></h1>
+    <p><small><?= $news->getCreatedAt() ?></small></p>
+    <p>Content: <?= $news->getContent() ?></p>
+<?php endforeach ?>
+
+
+
+

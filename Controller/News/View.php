@@ -6,16 +6,10 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 
-/**
- * Class ListAction
- * @package Inchoo\Sample03\Controller\Index
- *
- * List is reserved keyword in PHP, so we're using Action suffix in controller name !!
- */
-class ListAction extends Action
+class View extends Action
 {
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @var PageFactory
      */
     protected $resultPageFactory;
 
@@ -27,8 +21,6 @@ class ListAction extends Action
 
     public function execute()
     {
-        $resultPage = $this->resultPageFactory->create();
-
-        return $resultPage;
+        return $this->resultPageFactory->create();
     }
 }

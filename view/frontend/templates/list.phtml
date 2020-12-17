@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * @var \Inchoo\Sample03\Block\ListBlock $block
+ */
+?>
+<?php foreach ($block->getList() as $news): ?>
+    <p><?= $news->getId() ?>. <?= $news->getTitle() . ' - ' . $news->getCreatedAt() ?></p>
+<?php endforeach ?>
