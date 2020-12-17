@@ -42,7 +42,9 @@ class Crud  extends \Magento\Framework\App\Action\Action
          * New entry example
          */
         $news = $this->newsModelFactory->create();
-        $news->setTitle('Some fake news title');
+        $news->setTitle('Yet Another fake news title');
+        $news->setCreatedAt(new \DateTime('now'));
+        $news->setContent('One more and done');
 
         $this->newsResource->save($news);
 

@@ -20,7 +20,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'created_at',
                 [
                     'type' => Table::TYPE_DATETIME,
-                    'comment' => 'created at'
+                    'comment' => 'Created At'
                 ]
             )
             ->addColumn(
@@ -28,7 +28,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'updated_at',
                 [
                     'type' => Table::TYPE_DATETIME,
-                    'comment' => 'updated at'
+                    'comment' => 'Updated At'
                 ]
             )
             ->addColumn(
@@ -38,7 +38,20 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'type' => Table::TYPE_TEXT,
                     'comment' => 'content'
                 ]
-            );
+        );
+
+        $setup->getConnection()->addForeignKey(
+            $setup->getFkName(
+                'inchoo_news_comments',
+                'news_id',
+                'inchoo_news',
+                'news_id'
+            ),
+            'inchoo_news_comments',
+            'news_id',
+            'inchoo_news',
+            'news_id'
+        );
 
         $setup->endSetup();
     }
