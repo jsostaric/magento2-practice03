@@ -1,8 +1,10 @@
 <?php
-declare(strict_types=1);
+
 
 namespace Inchoo\Sample03\Setup;
 
+
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
@@ -14,44 +16,62 @@ class UpgradeSchema implements UpgradeSchemaInterface
     {
         $setup->startSetup();
 
-        $setup->getConnection()
-            ->addColumn(
-                $setup->getTable('inchoo_news'),
-                'created_at',
-                [
-                    'type' => Table::TYPE_DATETIME,
-                    'comment' => 'Created At'
-                ]
-            )
-            ->addColumn(
-                $setup->getTable('inchoo_news'),
-                'updated_at',
-                [
-                    'type' => Table::TYPE_DATETIME,
-                    'comment' => 'Updated At'
-                ]
-            )
-            ->addColumn(
-                $setup->getTable('inchoo_news'),
-                'content',
-                [
-                    'type' => Table::TYPE_TEXT,
-                    'comment' => 'content'
-                ]
-        );
+        $newsTable = 'inchoo_news';
+        $commentTable = 'inchoo_news_comments';
 
-        $setup->getConnection()->addForeignKey(
-            $setup->getFkName(
-                'inchoo_news_comments',
-                'news_id',
-                'inchoo_news',
-                'news_id'
-            ),
-            'inchoo_news_comments',
-            'news_id',
-            'inchoo_news',
-            'news_id'
-        );
+        if(version_compare($context->getVersion(), '0.0.6', '<')) {
+            if ($setup->getConnection()->isTableExists($setup->getTable($newsTable))) {
+                $setup->getConnection()
+                    ->addColumn($setup->getTable($newsTable), 'content', [
+                        'type' => Table::TYPE_TEXT,
+                        'length' => 255,
+                        'nullable' => false,
+                        'comment' => 'News Content'
+                ]);
+
+                $setup->getConnection()
+                    ->addColumn($setup->getTable($newsTable), 'created_at', [
+                        'type' => Table::TYPE_TIMESTAMP,
+                        'comment' => 'Created at',
+                        'default' => Table::TIMESTAMP_INIT
+                ]);
+                $setup->getConnection()
+                    ->addColumn($setup->getTable($newsTable), 'updated_at', [
+                        'type' => Table::TYPE_TIMESTAMP,
+                        'default' => Table::TIMESTAMP_INIT_UPDATE,
+                        'comment' => 'Updated At'
+                ]);
+            }
+        }
+
+        if(version_compare($context->getVersion(), '0.0.7', '<')){
+            if(!$setup->getConnection()->isTableExists($setup->getTable($commentTable))) {
+                $table = $setup->getConnection()->newTable($setup->getTable($commentTable))
+                    ->addColumn('comment_id', Table::TYPE_INTEGER, null, [
+                        'primary' => true,
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false
+                    ])
+                    ->addColumn('news_id', Table::TYPE_INTEGER, null, [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ])
+                    ->addColumn('content', Table::TYPE_TEXT, 255, [
+                        'nullable' => false,
+                        'default' => ''
+                    ])
+                    ->addForeignKey(
+                        $setup->getFkName($commentTable, 'news_id', 'inchoo_news', 'news_id'),
+                        'news_id',
+                        'inchoo_news',
+                        'news_id',
+                        AdapterInterface::FK_ACTION_CASCADE
+                    );
+
+                $setup->getConnection()->createTable($table);
+            }
+        }
 
         $setup->endSetup();
     }
