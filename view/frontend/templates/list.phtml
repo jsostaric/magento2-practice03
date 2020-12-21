@@ -2,8 +2,11 @@
 
 /**
  * @var \Inchoo\Sample03\Block\ListBlock $block
+ * @var \Inchoo\Sample03\ViewModel\NewsViewModel $newsViewModel
  */
+$newsViewModel = $block->getData('news_list');
+$newsCollection = $newsViewModel->getAllNews();
 ?>
-<?php foreach ($block->getList() as $news): ?>
+<?php foreach ($newsCollection as $news): ?>
     <p><?= $news->getId() ?>. <?= $news->getTitle() . ' - ' . $news->getCreatedAt() ?></p>
 <?php endforeach ?>
