@@ -25,7 +25,7 @@ class View extends Action
     public function execute()
     {
         $id = $this->getRequest()->getParam('id');
-        $this->newsRegistry->register('news_id', $id);
+        $this->newsRegistry->register('inchoo_news_id', $id);
 
         return $this->resultPageFactory->create();
     }

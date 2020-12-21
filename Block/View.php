@@ -17,6 +17,6 @@ class View extends Template
 
     public function getNewsId()
     {
-        return $this->newsRegistry->registry('news_id');
+        return $this->newsRegistry->registry('inchoo_news_id');
     }
 }
