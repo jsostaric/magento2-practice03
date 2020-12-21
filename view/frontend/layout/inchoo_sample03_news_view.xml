@@ -4,5 +4,10 @@
         <referenceContainer name="content">
             <block class="Inchoo\Sample03\Block\View" name="view" template="Inchoo_Sample03::view.phtml" />
         </referenceContainer>
+        <referenceBlock name="view">
+            <arguments>
+                <argument name="view_model" xsi:type="object">Inchoo\Sample03\ViewModel\NewsViewModel</argument>
+            </arguments>
+        </referenceBlock>
     </body>
 </page>

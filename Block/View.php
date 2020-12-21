@@ -1,30 +1,22 @@
 <?php
 
-
 namespace Inchoo\Sample03\Block;
 
-
-use Inchoo\Sample03\Model\ResourceModel\News\CollectionFactory;
+use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 
 class View extends Template
 {
-    protected $newsCollection;
-    public function __construct(Template\Context $context, CollectionFactory $newsCollectionFactory, array $data = [])
+    protected $newsRegistry;
+
+    public function __construct(Template\Context $context, Registry $newsRegistry, array $data = [])
     {
         parent::__construct($context, $data);
-        $this->newsCollection = $newsCollectionFactory;
+        $this->newsRegistry = $newsRegistry;
     }
 
-    /**
-     * @param $id
-     * @return \Inchoo\Sample03\Model\ResourceModel\News\Collection
-     */
-    public function showNews($id)
+    public function getNewsId()
     {
-        $id = $this->getRequest()->getParam('id', $id);
-        $news = $this->newsCollection->create()->addFieldToFilter('news_id', ['id' => $id]);
-
-        return $news;
+        return $this->newsRegistry->registry('news_id');
     }
 }
