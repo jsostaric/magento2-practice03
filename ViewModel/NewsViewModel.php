@@ -2,31 +2,23 @@
 
 namespace Inchoo\Sample03\ViewModel;
 
+use Magento\Framework\Controller\Result\ForwardFactory;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 
 class NewsViewModel implements ArgumentInterface
 {
     protected $newsFactory;
-    protected $newsCollectionFactory;
     protected $newsResource;
+    protected $resultForwardFactory;
 
     public function __construct(
         \Inchoo\Sample03\Model\ResourceModel\News $newsResource,
-        \Inchoo\Sample03\Model\ResourceModel\News\CollectionFactory $newsCollectionFactory,
-        \Inchoo\Sample03\Model\NewsFactory $newsFactory
+        \Inchoo\Sample03\Model\NewsFactory $newsFactory,
+        ForwardFactory $resultForwardFactory
     ) {
         $this->newsResource = $newsResource;
-        $this->newsCollectionFactory = $newsCollectionFactory;
         $this->newsFactory = $newsFactory;
-    }
-
-    public function getAllNews()
-    {
-        $newsCollection = $this->newsCollectionFactory->create();
-        $newsCollection->setOrder('news_id', 'desc');
-        $newsCollection->setPageSize(10);
-
-        return $newsCollection;
+        $this->resultForwardFactory = $resultForwardFactory;
     }
 
     public function getNewsById($id)
@@ -35,7 +27,7 @@ class NewsViewModel implements ArgumentInterface
         $this->newsResource->load($news, $id, 'news_id');
 
         if ($news->getId() === null) {
-            return;
+            return $this->resultForwardFactory->create()->forward('noroute');
         }
 
         return $news;
